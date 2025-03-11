@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:apple_pen/screens/task_list_screen.dart';
-import 'package:apple_pen/screens/note_list_screen.dart';
-import 'package:apple_pen/screens/profile_screen.dart';
+import 'task_list_screen.dart';
+import 'note_list_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override

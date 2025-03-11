@@ -15,6 +15,7 @@ class _NoteListScreenState extends State<NoteListScreen> {
 
   @override
   void initState() {
+
     super.initState();
     futureNotes = ApiService.getNotes();
   }

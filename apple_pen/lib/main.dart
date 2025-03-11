@@ -1,34 +1,51 @@
+// main.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Importation ajoutée
-import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
+import 'services/api_service.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Assure que Flutter est initialisé
-  final prefs = await SharedPreferences.getInstance(); // Récupère l'instance de SharedPreferences
-  final token = prefs.getString('auth_token'); // Récupère le token stocké
-  runApp(MyApp(initialRoute: token != null ? '/' : '/login')); // Démarre l'application
+  WidgetsFlutterBinding.ensureInitialized();
+  String? token = await ApiService.getToken();
+  runApp(MyApp(token: token));
 }
 
 class MyApp extends StatelessWidget {
-  final String initialRoute;
-
-  MyApp({required this.initialRoute});
+  final String? token;
+  const MyApp({super.key, this.token});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'To-Do List & Notes',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: initialRoute,
+      title: 'Gestion de tâches',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: token != null ? HomeScreen() : LoginScreen(),
       routes: {
-        '/': (context) => HomeScreen(),
         '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
+        '/home': (context) => HomeScreen(),
       },
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Accueil'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await ApiService.logout();
+              Navigator.pushReplacementNamed(context, '/login');
+            },
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text('Bienvenue sur ton accueil !'),
+      ),
     );
   }
 }
